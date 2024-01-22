@@ -17,6 +17,10 @@ app.get("/", function (req, res) {
   res.render("index");
 });
 
+app.get("/map", function (req, res) {
+  res.render("map");
+});
+
 app.get("/weather", async function (req, res) {
   try {
     const city = req.query.city || "Astana";
@@ -47,7 +51,8 @@ app.get("/weather", async function (req, res) {
       humidity,
       windSpeed,
       countryCode,
-    }, apiKeyWeather);
+      apiKeyMaps,
+    });
   } catch (error) {
     console.error(`Error making HTTPS request to OpenWeatherMap API: ${error.message}`);
     res.status(500).send("Internal Server Error");

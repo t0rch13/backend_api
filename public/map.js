@@ -1,13 +1,15 @@
 function initMap() {
-    var coordinates = { lat: 37.7749, lng: -122.4194 }; // Replace with your desired coordinates
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: coordinates,
-        zoom: 12
-    });
+    var mapElement = document.getElementById("map");
+    var lat = parseFloat(mapElement.getAttribute("data-lat"));
+    var lng = parseFloat(mapElement.getAttribute("data-lng"));
 
+    var location = { lat: lat, lng: lng };
+    var map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 5,
+        center: location
+    });
     var marker = new google.maps.Marker({
-        position: coordinates,
-        map: map,
-        title: 'Your Marker Title'
+        position: location,
+        map: map
     });
 }
