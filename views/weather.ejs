@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%= apiKey %>&callback=initMap" async defer></script>
+  <script src="../map.js"></script>
+  <title>Weather in <%= city %></title>
+</head>
+<body>
+    <h1>Temperature is <%= temp %> Celsius in <%= city %></h1>
+    <h2>The weather currently is <%= description %></h2>
+    <img src="<%= imgURL %>">
+    <h3>Coordinates of <%= city %> are lon: <%= coordinates.lon %>, lat: <%= coordinates.lat %></h3>
+    <h3>Temperature feels like <%= feelsLike %> Celsius</h3>
+    <h3>Humidity <%= humidity %></h3>
+    <h3>Wind Speed is <%= windSpeed %> km/h</h3>
+    <h3>Country code: <%= countryCode %></h3>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        // Call initMap function with the coordinates
+        initMap({ lat: <%= coordinates.lat %>, lng: <%= coordinates.lng %> });
+    });
+    </script>
+
+
+</body>
+</html>
