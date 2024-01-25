@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style.css">
 
-    <style>
-        /* * {
-            margin: 0;
-            padding: 0;
-        } */
-        #map {
-            height: 450px;
-            width: 600px;
-        }
-    </style>
     <title>Weather in <%= city %></title>
 </head>
 <body>
-    <h1>Temperature is <%= temp %> Celsius in <%= city %></h1>
-    <h2>The weather currently is <%= description %></h2>
-    <img src="<%= imgURL %>">
-    <h3>Coordinates of <%= city %> are lon: <%= coordinates.lon %>, lat: <%= coordinates.lat %></h3>
-    <h3>Temperature feels like <%= feelsLike %> Celsius</h3>
-    <h3>Humidity <%= humidity %></h3>
-    <h3>Wind Speed is <%= windSpeed %> km/h</h3>
-    <h3>Country code: <%= countryCode %></h3>
-    <div id="map" data-lat="<%=coordinates.lat%>" data-lng="<%=coordinates.lon%>"></div>
     
+    <%- include('layouts/navbar'); -%>
+
+    <div class="container">
+        <h1>Weather</h1>
+        <div class="weather-info">
+            <h2>Temperature is <%= temp %> Celsius in <%= city %></h1>
+            <h3>The weather currently is <%= description %></h2>
+            <img src="<%= imgURL %>" class="img-fluid" alt="Weather Image">
+            <h3>Coordinates of <%= city %> are lon: <%= coordinates.lon %>, lat: <%= coordinates.lat %></h3>
+            <h3>Temperature feels like <%= feelsLike %> Celsius</h3>
+            <h3>Humidity <%= humidity %></h3>
+            <h3>Wind Speed is <%= windSpeed %> km/h</h3>
+            <h3>Country code: <%= countryCode %></h3>
+        </div>
+
+        <h2>Latest News:</h2>
+        <div class="latest-news">
+            <ul class="article-list">
+                <% articles.forEach(article => { %>
+                    <li class="article-item">
+                        <a href="<%= article.url %>" target="_blank" class="article-link">
+                            <%= article.title %>
+                        </a>
+                        - <%= article.description %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+
+        <h2><%= city %> on the Map</h2>
+        <div id="map" data-lat="<%=coordinates.lat%>" data-lng="<%=coordinates.lon%>"></div>
+    </div>
+
     <script src="/map.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGiuA9tp6RdD4No9aEzZ438n38NyMIN7M&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=apiKeyMaps%>&callback=initMap"></script>
+
+    <%- include('layouts/footer'); -%> 
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

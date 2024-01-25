@@ -9,7 +9,6 @@ const PORT = 3000;
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
-//app.set("views", path.join(__dirname, "views"));
 app.use(express.static('public'));
 
 // Serve the index.ejs file
@@ -17,19 +16,24 @@ app.get("/", function (req, res) {
   res.render("index");
 });
 
-app.get("/map", function (req, res) {
-  res.render("map");
-});
-
 app.get("/weather", async function (req, res) {
   try {
+    const currentDate = new Date();
+    const lastMonthDate = new Date();
+    lastMonthDate.setMonth(currentDate.getMonth() - 1);
+    const fromDate = formatDate(lastMonthDate);
+
     const city = req.query.city || "Astana";
     const apiKeyWeather = "0cf3f5de822ed6c4e1bdb6901da1036e";
     const apiKeyMaps = 'AIzaSyAGiuA9tp6RdD4No9aEzZ438n38NyMIN7M';
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKeyWeather}&units=metric`;
+    const apiUrlWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKeyWeather}&units=metric`;
+    const apiUrlNews = `https://newsapi.org/v2/everything?q=${city}&searchIn=title&from=${fromDate}&language=en&sortBy=popularity&apiKey=27df3cb829584967b560725662dc7f47`
 
-    const apiResponse = await axios.get(apiUrl);
-    const weatherData = apiResponse.data;
+    const apiResponseWeather = await axios.get(apiUrlWeather);
+    const weatherData = apiResponseWeather.data;
+
+    const apiResponseNews = await axios.get(apiUrlNews);
+    const newsData = apiResponseNews.data;
 
     const temp = weatherData.main.temp;
     const description = weatherData.weather[0].description;
@@ -40,6 +44,11 @@ app.get("/weather", async function (req, res) {
     const humidity = weatherData.main.humidity;
     const windSpeed = weatherData.wind.speed;
     const countryCode = weatherData.sys.country;
+
+    const articles = newsData.articles.slice(0, 5);
+    if (!articles) {
+      articles = 'No articles found';
+    }
 
     res.render("weather", {
       temp,
@@ -52,13 +61,36 @@ app.get("/weather", async function (req, res) {
       windSpeed,
       countryCode,
       apiKeyMaps,
+      articles,
     });
   } catch (error) {
-    console.error(`Error making HTTPS request to OpenWeatherMap API: ${error.message}`);
+    console.error(`Error making HTTPS request to weather: ${error.message}`);
     res.status(500).send("Internal Server Error");
   }
 });
 
+app.get('/apod', async (req, res) => {
+  try {
+    const response = await axios.get('https://api.nasa.gov/planetary/apod', {
+      params: {
+        api_key: 'FYUgxA9FfcQbu2CxnHsUuNhfstLZjE24m9Dzykew',
+      },
+    });
+
+    res.render('apod', { apod: response.data });
+  } catch (error) {
+    console.error('Error fetching APOD data:', error);
+
+    res.render('apod', { apod: null });
+  }
+});
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 app.listen(PORT, function (err) {
   if (err) console.log(err);
