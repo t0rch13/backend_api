@@ -18,7 +18,7 @@ Welcome to the Backend WeatherApp! This is a multifunctional weather app that pr
 
 ### Installation
 
-1. Clone the repository: git clone https://github.com/your-username/backend-weatherapp.git
+1. Clone the repository: git clone https://github.com/t0rch13/backend_api.git
 2. Install dependencies: npm install
 3. Start the server: npm start
 4. Go to localhost:3000
